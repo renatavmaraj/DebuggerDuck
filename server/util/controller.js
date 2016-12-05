@@ -1,6 +1,5 @@
 const db = require('../db/schemas.js');
 
-
 // Returns an object with a key of data
 const buildResObj = function (data) {
   return {
@@ -9,16 +8,26 @@ const buildResObj = function (data) {
 }
 
 module.exports = {
+
   login: {
     // Login controller functions for GET
     get: (req, res) => {
+      passport.authenticate('facebook')
       console.log('Login GET');
-      res.send(200);
+      //res.send(200);
     },
-    // Login controller functions for GET
-    post: (req, res) => {
-      console.log('Login POST');
-      res.send(200);
+
+    //Login controller function for oath
+    oauth: (req,res) => {
+      passport.authenticate('facebook', { failureRedirect: '/login' })
+      res.redirect('/');
+    },
+
+  // Login controller functions for GET
+    profile: (req, res) => {
+      require('connect-ensure-login').ensureLoggedIn()
+      res.render('profile', { user: req.user })
+      console.log("This is user: ", req.user)
     }
   },
   group: {
